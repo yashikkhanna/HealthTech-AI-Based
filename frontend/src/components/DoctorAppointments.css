@@ -1,0 +1,60 @@
+/* DoctorAppointments.css */
+
+.doctor-appointments-container {
+  background-color: #3b3be6; /* Blue background */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 50px;
+}
+
+.appointments-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 30px;
+  width: 80%;
+  max-width: 900px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.appointments-card h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.appointments-table th,
+.appointments-table td {
+  padding: 12px;
+  text-align: left;
+}
+
+.appointments-table th {
+  background-color: #f7f7f7;
+  font-weight: bold;
+}
+
+.appointments-table tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.appointments-table button {
+  padding: 6px 12px;
+  background-color: #3b3be6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.appointments-table button:hover {
+  background-color: #2a2abf;
+}

@@ -1,0 +1,27 @@
+.prescription-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.prescription-container {
+  max-width: 800px;
+  width: 100%;
+  padding: 20px;
+}
+
+.form-fields {
+  margin-top: 20px;
+}
+
+.view-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.submit-btn {
+  margin-top: 20px;
+}
