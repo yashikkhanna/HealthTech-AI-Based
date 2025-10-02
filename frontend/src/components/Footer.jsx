@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaLocationArrow, FaPhone } from "react-icons/fa6";
-import { MdEmail } from "react-icons/md";
+import { FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   const hours = [
@@ -23,7 +22,7 @@ const Footer = () => {
         <hr />
         <div className="content">
           <div>
-            <img src="/logo.png" alt="logo" className="logo-img"/>
+            <img src="/logo.png" alt="logo" className="logo-img" />
           </div>
           <div>
             <h4>Quick Links</h4>
@@ -45,18 +44,26 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4>Contact</h4>
-            <div>
-              <FaPhone />
-              <span>9123000000</span>
+            <h4>Developed By</h4>
+            <div style={{ marginBottom: "1rem" }}>
+              <p>Sanya Batra</p>
+              <a
+                href="https://www.linkedin.com/in/sanya-batra-51b974283/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaLinkedin size={24} color="#0A66C2" />
+              </a>
             </div>
             <div>
-              <MdEmail />
-              <span>zeelab@gmail.com</span>
-            </div>
-            <div>
-              <FaLocationArrow />
-              <span>Delhi , India</span>
+              <p>Yashik Khanna</p>
+              <a
+                href="https://www.linkedin.com/in/yashik-khanna-453448216/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaLinkedin size={24} color="#0A66C2" />
+              </a>
             </div>
           </div>
         </div>

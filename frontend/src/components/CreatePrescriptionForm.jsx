@@ -12,7 +12,6 @@ import {
 import {
   LocalizationProvider,
   DatePicker,
-  TimePicker,
 } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import "./CreatePrescriptionForm.css";
@@ -20,7 +19,9 @@ import "./CreatePrescriptionForm.css";
 const REMINDER_MEDIUMS = ["email", "sms", "whatsapp"];
 
 export default function CreatePrescriptionForm() {
-  const { appointmentId } = useParams();
+  // ✅ we now get patientId from URL
+  const { patientId } = useParams();
+
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [prescription, setPrescription] = useState(null);
@@ -35,16 +36,17 @@ export default function CreatePrescriptionForm() {
     reminderTimes: [null],
   });
 
-  // Fetch existing prescription
+  // 🔹 Fetch prescriptions by patientId
   useEffect(() => {
     axios
       .get(
-        `http://localhost:4000/api/v1/prescription/prescriptions/${appointmentId}`,
+        `http://localhost:4000/api/v1/prescription/prescriptions/${patientId}`,
         { withCredentials: true }
       )
       .then((res) => {
-        if (res.data?.data) {
-          const fetched = res.data.data;
+        if (res.data?.data && res.data.data.length > 0) {
+          // take the first prescription (or adapt to show multiple)
+          const fetched = res.data.data[0];
           setPrescription(fetched);
           setIsEditing(false);
         } else {
@@ -53,7 +55,7 @@ export default function CreatePrescriptionForm() {
       })
       .catch(() => setIsEditing(true))
       .finally(() => setLoading(false));
-  }, [appointmentId]);
+  }, [patientId]);
 
   // Handle frequency change → adjust number of time pickers
   const handleFrequencyChange = (freq) => {
@@ -67,52 +69,45 @@ export default function CreatePrescriptionForm() {
     }));
   };
 
-  // Time formatting
-  const formatTime = (date) => {
-    if (!(date instanceof Date) || isNaN(date)) return null;
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    return `${hours}:${minutes}`;
-  };
-
   // Submit handler
   const handleSubmit = () => {
-  const payload = {
-    ...formData,
-    appointmentId,
-    reminderMedium: formData.reminderMedium.toLowerCase(),
-    startDate: formData.startDate || null,
-    endDate: formData.endDate || null,
-    reminderTimes: formData.reminderTimes
-      .filter((t) => typeof t === "string" && t.trim() !== ""),
+    const payload = {
+      ...formData,
+      patientId, // ✅ send patientId not appointmentId
+      reminderMedium: formData.reminderMedium?.toLowerCase(),
+      startDate: formData.startDate,
+      endDate: formData.endDate,
+      reminderTimes: formData.reminderTimes.filter(
+        (t) => typeof t === "string" && t.trim() !== ""
+      ),
+    };
+
+    const apiCall = prescription
+      ? axios.put(
+          `http://localhost:4000/api/v1/prescription/updatePrescriptions/${prescription._id}`,
+          payload,
+          { withCredentials: true }
+        )
+      : axios.post(
+          `http://localhost:4000/api/v1/prescription/create-Prescription`,
+          payload,
+          { withCredentials: true }
+        );
+
+    apiCall
+      .then(() =>
+        axios.get(
+          `http://localhost:4000/api/v1/prescription/prescriptions/${patientId}`,
+          { withCredentials: true }
+        )
+      )
+      .then((res) => {
+        if (res.data?.data && res.data.data.length > 0) {
+          setPrescription(res.data.data[0]);
+          setIsEditing(false);
+        }
+      });
   };
-
-  const apiCall = prescription
-    ? axios.put(
-        `http://localhost:4000/api/v1/prescription/updatePrescriptions/${prescription._id}`,
-        payload,
-        { withCredentials: true }
-      )
-    : axios.post(
-        `http://localhost:4000/api/v1/prescription/create-Prescription`,
-        payload,
-        { withCredentials: true }
-      );
-
-  apiCall
-    .then(() =>
-      axios.get(
-        `http://localhost:4000/api/v1/prescription/prescriptions/${appointmentId}`,
-        { withCredentials: true }
-      )
-    )
-    .then((res) => {
-      if (res.data?.data) {
-        setPrescription(res.data.data);
-        setIsEditing(false);
-      }
-    });
-};
 
   if (loading) return <p>Loading...</p>;
 
@@ -277,26 +272,28 @@ export default function CreatePrescriptionForm() {
 
                 {/* Reminder Times */}
                 {formData.reminderTimes.map((time, index) => (
-                    <TextField
-                        key={index}
-                        label={`Reminder Time ${index + 1}`}
-                        type="time"
-                        value={time || ""}
-                        onChange={(e) => {
-                        const updatedTimes = [...formData.reminderTimes];
-                        updatedTimes[index] = e.target.value; // store as string e.g. "09:00"
-                        setFormData({ ...formData, reminderTimes: updatedTimes });
-                        }}
-                        fullWidth
-                        InputLabelProps={{
-                        shrink: true,
-                        }}
-                        inputProps={{
-                        step: 60, // optional: step in seconds (60s = 1min)
-                        }}
-                    />
-                    ))}
-
+                  <TextField
+                    key={index}
+                    label={`Reminder Time ${index + 1}`}
+                    type="time"
+                    value={time || ""}
+                    onChange={(e) => {
+                      const updatedTimes = [...formData.reminderTimes];
+                      updatedTimes[index] = e.target.value;
+                      setFormData({
+                        ...formData,
+                        reminderTimes: updatedTimes,
+                      });
+                    }}
+                    fullWidth
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      step: 60,
+                    }}
+                  />
+                ))}
               </Grid>
 
               <Button
