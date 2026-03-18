@@ -5,17 +5,15 @@ const prescriptionSchema = new mongoose.Schema({
   patientId: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
-    required: true,
+
   },
   doctorId: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
-    required: true,
   },
   appointmentId: {
     type: mongoose.Schema.ObjectId,
     ref: "Appointment",
-    required: true,
   },
   medicineName: {
     type: String,
@@ -47,7 +45,6 @@ const prescriptionSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   }
-  
 });
 
 export const Prescription = mongoose.model("Prescription", prescriptionSchema);
