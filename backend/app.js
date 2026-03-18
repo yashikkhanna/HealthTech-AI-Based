@@ -12,7 +12,7 @@ import prescriptionRouter from "./router/prescriptionRouter.js";
 import DonationRouter from "./router/donationRoutes.js"
 import addRouter from "./router/addRoutes.js"
 const app = express();
-
+const w=10;
 config({ path: "./config/config.env" });
 
 app.use(cors({
