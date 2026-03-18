@@ -5,5 +5,5 @@
 Note- Automations are stoped due to security reasons. 
 
 
-ADMIN DASHBOARD LINK-  https://hospital-managementdashboard.netlify.app/
-PATIENT DASHBOARD LINK- https://hospital-managementfrontend.netlify.app/
+ADMIN DASHBOARD LINK-  https://admin-desk.netlify.app
+PATIENT DASHBOARD LINK- https://patient-ui.netlify.app
